@@ -11,6 +11,11 @@ class PageRepository
     page
   end
 
+  def update(page)
+    table.where(id: page.id).update(page.to_db)
+    page
+  end
+
   def delete(page)
     table.where(id: page.id).delete
   end

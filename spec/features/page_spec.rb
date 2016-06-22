@@ -36,6 +36,7 @@ describe 'API v1 pages', type: :feature do
       page = FactoryGirl.build(:page)
       count = DB.connection[:pages].count
       post('/v1/pages',
+           active: true,
            slug: page.slug,
            title: page.title,
            content: page.content,
@@ -74,7 +75,65 @@ describe 'API v1 pages', type: :feature do
     end
   end
 
-  context 'DELETE /v1/page/:id' do
+  context 'PATCH /v1/pages/:id' do
+    it 'update page' do
+      page = FactoryGirl.build(:page, id: rand(1..1000))
+      DB.connection[:pages].insert(page.to_db)
+      updated_title = 'Updated title page'
+      updated_content = 'Updated content page'
+      patch("/v1/pages/#{page.id}",
+            active: 0,
+            title: updated_title,
+            content: updated_content)
+      expect(last_response.status).to eq 200
+      data = JSON.parse(last_response.body)
+      expect(data['id']).to eq page.id
+      expect(data['active']).to eq false
+      expect(data['title']).to eq updated_title
+      expect(data['content']).to eq updated_content
+      expect(data['updated_at']).to eq Time.now.to_i
+    end
+
+    it 'update active - true' do
+      page = FactoryGirl.build(:page, id: rand(1..1000), active: false)
+      DB.connection[:pages].insert(page.to_db)
+      patch("/v1/pages/#{page.id}",
+            active: 1)
+      expect(last_response.status).to eq 200
+      data = JSON.parse(last_response.body)
+      expect(data['id']).to eq page.id
+      expect(data['active']).to eq true
+    end
+
+    it 'returns error page not found' do
+      expected_id = 78
+      expected_json = {
+        error: 'page_not_found',
+        error_description: 'Page not found.'
+      }.to_json
+      patch("/v1/pages/#{expected_id}",
+            title: 'updated title')
+      expect(last_response.status).to eq 404
+      expect(last_response.body).to eq expected_json
+    end
+
+    it 'returns error page title empty' do
+      page = FactoryGirl.build(:page, id: rand(1..1000))
+      DB.connection[:pages].insert(page.to_db)
+      expected_json = {
+        error: 'page_title_empty',
+        error_description: 'Enter title page.'
+      }.stringify_keys
+      updated_title = ''
+      patch("/v1/pages/#{page.id}",
+            title: updated_title)
+      data = JSON.parse(last_response.body)
+      expect(last_response.status).to eq 400
+      expect(data).to eq expected_json
+    end
+  end
+
+  context 'DELETE /v1/pages/:id' do
     it 'delete page' do
       page = FactoryGirl.build(:page, id: rand(1..1000))
       DB.connection[:pages].insert(page.to_db)

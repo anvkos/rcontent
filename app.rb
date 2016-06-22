@@ -10,6 +10,8 @@ require './app/services/create_page_service'
 require './app/params/create_page_params'
 require './app/services/delete_page_service'
 require './app/params/delete_page_params'
+require './app/services/update_page_service'
+require './app/params/update_page_params'
 
 class App < Sinatra::Base
   get '/v1/pages' do
@@ -20,8 +22,7 @@ class App < Sinatra::Base
     service.on(:page_not_found) { return page_not_found }
     page = service.call GetPageParams.new(params)
     status 200
-    page.to_h
-        .to_json
+    page_prepare page
   end
 
   post '/v1/pages' do
@@ -29,11 +30,16 @@ class App < Sinatra::Base
     service.on(:page_title_empty) { return page_title_empty }
     page = service.call CreatePageParams.new(params)
     status 201
-    page.to_h
-        .to_json
+    page_prepare page
   end
 
   patch '/v1/pages/:id' do
+    service = UpdatePageService.new
+    service.on(:page_not_found) { return page_not_found }
+    service.on(:page_title_empty) { return page_title_empty }
+    page = service.call UpdatePageParams.new(params)
+    status 200
+    page_prepare page
   end
 
   delete '/v1/pages/:id' do
@@ -69,5 +75,12 @@ class App < Sinatra::Base
       error_description: 'Check API documentation.'
     }
     @error.to_json
+  end
+
+  private
+
+  def page_prepare(page)
+    page.to_h
+        .to_json
   end
 end

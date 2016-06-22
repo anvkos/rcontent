@@ -9,7 +9,6 @@ class CreatePageService
     return if page_title_empty?(params)
     repo = PageRepository.new
     page = Page.new(params.to_h)
-    puts '[service page]'
     repo.create(page)
   end
 end

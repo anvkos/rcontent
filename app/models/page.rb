@@ -25,6 +25,12 @@ class Page
     }.delete_if { |_, v| v.nil? }
   end
 
+  def merge(attributes)
+    attributes.each do |key, val|
+      self[key] = val if respond_to?(key)
+    end
+  end
+
   def self.from_db(data)
     attributes = {
       id: data[:id],
