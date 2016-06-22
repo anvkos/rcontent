@@ -30,4 +30,47 @@ describe 'API v1 pages', type: :feature do
       expect(last_response.body).to eq expected_json
     end
   end
+
+  context 'POST /v1/pages' do
+    it 'created page' do
+      page = FactoryGirl.build(:page)
+      count = DB.connection[:pages].count
+      post('/v1/pages',
+           slug: page.slug,
+           title: page.title,
+           content: page.content,
+           image: page.image)
+      new_count = DB.connection[:pages].count
+      data = JSON.parse(last_response.body)
+      expect(last_response.status).to eq 201
+      expect(data).to have_key('id')
+      expect(data['active']).to eq false
+      expect(data['slug']).to eq page.slug
+      expect(data['title']).to eq page.title
+      expect(data['content']).to eq page.content
+      expect(data['image']).to eq page.image
+      expect(data['created_at']).to eq Time.now.to_i
+      expect(data['update_at']).to be_nil
+      expect(new_count).to eq count + 1
+    end
+
+    it 'returns error title empty' do
+      expected_json = {
+        error: 'page_title_empty',
+        error_description: 'Enter title page.'
+      }.stringify_keys
+      page = FactoryGirl.build(:page)
+      count = DB.connection[:pages].count
+      page.title = ''
+      post('/v1/pages',
+           active: page.active,
+           title: page.title,
+           content: page.content)
+      new_count = DB.connection[:pages].count
+      data = JSON.parse(last_response.body)
+      expect(last_response.status).to eq 400
+      expect(data).to eq expected_json
+      expect(new_count).to eq count
+    end
+  end
 end

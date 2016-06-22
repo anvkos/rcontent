@@ -3,7 +3,7 @@ require './app/models/page'
 
 FactoryGirl.define do
   factory :page do
-    active { true }
+    active true
     slug { Faker::Lorem.word }
     title { Faker::Lorem.sentence }
     content { Faker::Lorem.sentence(5) }

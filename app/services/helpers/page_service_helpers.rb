@@ -9,4 +9,11 @@ module PageServiceHelpers
       true
     end
   end
+
+  def page_title_empty?(params)
+    if params[:title].nil? || params[:title].empty?
+      broadcast(:page_title_empty)
+      true
+    end
+  end
 end

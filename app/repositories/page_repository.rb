@@ -5,6 +5,12 @@ class PageRepository
     find_by(id: id)
   end
 
+  def create(page)
+    page.created_at = Time.now.to_i
+    page.id = table.insert(page.to_db)
+    page
+  end
+
   private
 
   def find_by(params)
