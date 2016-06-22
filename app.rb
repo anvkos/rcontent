@@ -8,6 +8,8 @@ require './app/params/get_page_params'
 require './app/services/get_page_service'
 require './app/services/create_page_service'
 require './app/params/create_page_params'
+require './app/services/delete_page_service'
+require './app/params/delete_page_params'
 
 class App < Sinatra::Base
   get '/v1/pages' do
@@ -35,6 +37,10 @@ class App < Sinatra::Base
   end
 
   delete '/v1/pages/:id' do
+    service = DeletePageService.new
+    service.on(:page_not_found) { return page_not_found }
+    service.call DeletePageParams.new(params)
+    status 204
   end
 
   get '/status' do

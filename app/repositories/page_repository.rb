@@ -11,6 +11,10 @@ class PageRepository
     page
   end
 
+  def delete(page)
+    table.where(id: page.id).delete
+  end
+
   private
 
   def find_by(params)

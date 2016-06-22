@@ -73,4 +73,27 @@ describe 'API v1 pages', type: :feature do
       expect(new_count).to eq count
     end
   end
+
+  context 'DELETE /v1/page/:id' do
+    it 'delete page' do
+      page = FactoryGirl.build(:page, id: rand(1..1000))
+      DB.connection[:pages].insert(page.to_db)
+      count = DB.connection[:pages].count
+      delete("/v1/pages/#{page.id}")
+      new_count = DB.connection[:pages].count
+      expect(last_response.status).to eq 204
+      expect(new_count).to eq count - 1
+    end
+
+    it 'returns error page not found' do
+      expected_id = 78
+      expected_json = {
+        error: 'page_not_found',
+        error_description: 'Page not found.'
+      }.to_json
+      delete "/v1/pages/#{expected_id}"
+      expect(last_response.status).to eq 404
+      expect(last_response.body).to eq expected_json
+    end
+  end
 end
