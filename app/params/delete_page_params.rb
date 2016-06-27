@@ -1,11 +1,5 @@
-require 'hanami/validations'
+require_relative 'base_params'
 
-class DeletePageParams
-  include Hanami::Validations
-
+class DeletePageParams < BaseParams
   attribute :id, type: Integer
-
-  def [](key)
-    send key.to_sym
-  end
 end

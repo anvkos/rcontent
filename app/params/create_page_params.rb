@@ -1,15 +1,9 @@
-require 'hanami/validations'
+require_relative 'base_params'
 
-class CreatePageParams
-  include Hanami::Validations
-
+class CreatePageParams < BaseParams
   attribute :active,  type: Boolean
   attribute :slug,    type: String
   attribute :title,   type: String
   attribute :content, type: String
   attribute :image,   type: String
-
-  def [](key)
-    send key.to_sym
-  end
 end

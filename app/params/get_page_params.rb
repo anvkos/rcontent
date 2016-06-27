@@ -1,8 +1,6 @@
-require 'hanami/validations'
+require_relative 'base_params'
 
-class GetPageParams
-  include Hanami::Validations
-
+class GetPageParams < BaseParams
   attribute :id,      type: Integer
   attribute :active,  type: Boolean
   attribute :slug,    type: String
@@ -11,8 +9,4 @@ class GetPageParams
   attribute :image,   type: String
   attribute :created_at, type: Time
   attribute :updated_at, type: Time
-
-  def [](key)
-    send key.to_sym
-  end
 end
