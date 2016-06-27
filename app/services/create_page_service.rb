@@ -9,6 +9,7 @@ class CreatePageService
     return if page_title_empty?(params)
     repo = PageRepository.new
     page = Page.new(params.to_h)
+    page.created_at = Time.now
     repo.create(page)
   end
 end

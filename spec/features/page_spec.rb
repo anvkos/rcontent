@@ -50,7 +50,9 @@ describe 'API v1 pages', type: :feature do
       expect(data['title']).to eq page.title
       expect(data['content']).to eq page.content
       expect(data['image']).to eq page.image
-      expect(data['created_at']).to eq Time.now.to_i
+      expect(
+        Time.parse(data['created_at']).to_i
+      ).to eq Time.now.to_i
       expect(data['update_at']).to be_nil
       expect(new_count).to eq count + 1
     end
@@ -91,7 +93,9 @@ describe 'API v1 pages', type: :feature do
       expect(data['active']).to eq false
       expect(data['title']).to eq updated_title
       expect(data['content']).to eq updated_content
-      expect(data['updated_at']).to eq Time.now.to_i
+      expect(
+        Time.parse(data['updated_at']).to_i
+      ).to eq Time.now.to_i
     end
 
     it 'update active - true' do

@@ -13,7 +13,7 @@ class UpdatePageService
     page = repo.find(params[:id])
     return unless page_exists?(page)
     page.merge(params)
-    page.updated_at = Time.now.to_i
+    page.updated_at = Time.now
     repo.update(page)
   end
 end

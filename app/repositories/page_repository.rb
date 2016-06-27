@@ -6,7 +6,6 @@ class PageRepository
   end
 
   def create(page)
-    page.created_at = Time.now.to_i
     page.id = table.insert(page.to_db)
     page
   end
