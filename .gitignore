@@ -1,0 +1,7 @@
+.env
+.ruby-gemset
+.ruby-version
+coverage
+.byebug_history
+README.html
+log/*
