@@ -40,7 +40,7 @@ GEM
       ruby_dep (~> 1.2)
     minitest (5.9.0)
     mysql2 (0.4.4)
-    rack (1.6.4)
+    rack (1.6.13)
     rack-contrib (1.4.0)
       git-version-bump (~> 0.15)
       rack (~> 1.4)
